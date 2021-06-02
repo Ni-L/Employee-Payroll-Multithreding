@@ -8,9 +8,14 @@ namespace Employee_payroll_multithreding
 {
     class Program
     {
+      
         static void Main(string[] args)
         {
-            Console.WriteLine("******WELCOME*********");
+            Console.WriteLine("Welcome To Employee Payroll Problem Using MultiThreading");
+            EmpRepository repository = new EmpRepository();
+            repository.DataBaseConnection(); // database connection using the sql connection string
+
+            Console.ReadLine();
         }
     }
 }
