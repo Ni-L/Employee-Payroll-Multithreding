@@ -136,7 +136,33 @@ namespace Employee_payroll_multithreding
                 thread.Start();
             });
         }
+        //UC3: Ability to add multiple employee to payroll DB using Threads so as to get a better response
 
+        public void AddEmployeeThreadSynchronization(List<EmployeeModel> employeeList)
+        {
+            ///For each employeeData present in list new thread is created and all threads run according to the time slot assigned by the thread scheduler.
+            employeeList.ForEach(employeeData =>
+            {
+                //Lock the set of codes for the current employeeData
+                Task thread = new Task(() =>   
+                {
+
+                    lock (employeeData)
+                    {
+                        // Printing the current thread id being utilised
+                        Console.WriteLine("Employee Being added" + employeeData.EmployeeName);
+                        // Calling the method to add the data to the address book database
+                        Console.WriteLine("Current thread id: " + Thread.CurrentThread.ManagedThreadId);  
+                        this.AddEmployeeToDataBase(employeeData);
+                        // Indicating mesasage to end of data addition
+                        Console.WriteLine("Employee added:" + employeeData.EmployeeName);
+                    }
+
+                });
+                thread.Start();
+                thread.Wait();
+            });
+        }
     }
 }
     
