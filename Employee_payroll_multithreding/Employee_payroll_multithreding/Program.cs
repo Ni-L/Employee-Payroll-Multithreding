@@ -13,8 +13,8 @@ namespace Employee_payroll_multithreding
         {
             Console.WriteLine("Welcome To Employee Payroll Problem Using MultiThreading");
             EmpRepository repository = new EmpRepository();
-            repository.DataBaseConnection(); // database connection using the sql connection string
-
+            // database connection using the sql connection string
+            repository.DataBaseConnection(); 
             Console.ReadLine();
         }
     }

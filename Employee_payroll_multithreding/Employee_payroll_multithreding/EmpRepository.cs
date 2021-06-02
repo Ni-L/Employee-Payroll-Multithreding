@@ -4,16 +4,18 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Employee_payroll_multithreding
 {
-    class EmpRepository
+    public class EmpRepository
     {
         //Connection string
         public static string connectionString = @"Data Source=DESKTOP-DL043RM;Initial Catalog=payroll;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"; //Specifying the connection string from the sql server connection.
         // Establishing the connection using the Sqlconnection. 
-        SqlConnection connection = new SqlConnection(connectionString);  
+        SqlConnection connection = new SqlConnection(connectionString);
+        public List<EmployeeModel> employeeList;
 
         public bool DataBaseConnection()//Adding method boolean type which return true if there is connection
         {
@@ -105,6 +107,34 @@ namespace Employee_payroll_multithreding
                 connection.Close();
             }
 
+        }
+        // UC2:- Ability to add multiple employee to payroll DB using Threads so as to get a better response
+
+        public void AddEmployeeDataBaseWithThread(List<EmployeeModel> employeelList)
+        {
+            //For each employeeData present in list new thread
+            //is created and all threads run according to the time slot assigned by the thread scheduler.
+            //It reprsents all data form the list
+            employeelList.ForEach(employeeData =>
+            {
+                //The Task class represents a single operation that does not return a value and that usually executes asynchronously.
+                //Asynchronous programming is an efficient approach towards activities blocked or access is delayed.
+                Task thread = new Task(() =>
+                {
+                    // Printing the current thread id being utilised
+                    Console.WriteLine("Employee Being added" + employeeData.EmployeeName);
+                    // Calling the method to add the data to the address book database
+                    //Thread Create and control thread,sets its priority,And get its status
+                    //Current thread get currently running state
+                    //There is Id for Thread Manageing which manage the thread 
+                    Console.WriteLine("Current thread id: " + Thread.CurrentThread.ManagedThreadId); 
+                    this.AddEmployeeToDataBase(employeeData);
+                    // Indicating mesasage to end of data 
+                    Console.WriteLine("Employee added:" + employeeData.EmployeeName); 
+                });
+                //For the Task Start Thread
+                thread.Start();
+            });
         }
 
     }
